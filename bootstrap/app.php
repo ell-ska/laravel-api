@@ -31,8 +31,6 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (Exception $e) {
-            dump($e);
-
             return response()->json([
                 'message' => 'something went horribly wrong',
             ], 500);

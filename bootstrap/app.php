@@ -1,6 +1,6 @@
 <?php
 
-use App\Exceptions\AuthException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,10 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->render(function (AuthException $e) {
+        $exceptions->render(function (AuthenticationException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
-            ], $e->getCode());
+            ], 400);
         });
 
         $exceptions->render(function (ValidationException $e) {
@@ -31,6 +31,8 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (Exception $e) {
+            dump($e);
+
             return response()->json([
                 'message' => 'something went horribly wrong',
             ], 500);

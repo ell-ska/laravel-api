@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\AuthException;
 use App\Models\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -37,7 +37,7 @@ class AuthController extends Controller
         $user = User::where('username', $request->username)->firstOrFail();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw new AuthException('invalid credentials', 400);
+            throw new AuthenticationException('invalid credentials');
         }
 
         $token = $user->createToken('access-token');
@@ -46,5 +46,12 @@ class AuthController extends Controller
             'message' => 'user authenticated',
             'access-token' => $token->plainTextToken,
         ], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return response()->json(['message' => 'user logged out'], 200);
     }
 }

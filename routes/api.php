@@ -14,3 +14,4 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('/chat', [ChatController::class, 'chat']);
+Route::post('/conversation', [ChatController::class, 'conversation'])->middleware('auth:sanctum');
